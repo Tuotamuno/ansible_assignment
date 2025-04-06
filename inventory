@@ -1,1 +1,2 @@
-192.168.1.34
+192.168.1.34 ansible_user=vboxuser
+192.168.1.199 ansible_user=divine
