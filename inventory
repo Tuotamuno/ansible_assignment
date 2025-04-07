@@ -1,4 +1,4 @@
 [all]
-192.168.171.4 ansible_user=vboxuser 
-192.168.171.118 ansible_user=divine
+192.168.1.213 ansible_user=vboxuser 
+192.168.1.198 ansible_user=divine
 
