@@ -1,0 +1,47 @@
+---
+- hosts: all
+  become: true
+  pre_tasks:
+
+    - name: install updates
+      tags: always
+      apt:
+        upgrade: dist
+        update_cache: yes
+
+
+- hosts: all
+  become: true
+  tasks:
+
+
+   - name: create admin user
+     tags: always
+     user:
+         name: admin
+         groups: root 
+
+   - name: add ssh key for admin
+     tags: always
+     authorized_key:
+         user: admin
+         key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC+QWAXxQFgN4CItjnyrp22UnM6iT20RGX5+oB9YhYaZ ansible"
+
+   - name: add sudoers file for admin
+     tags: always
+     copy: 
+        src: sudoer_admin
+        dest: /etc/sudoers.d/admin
+        owner: root
+        group: root
+        mode: 0440
+
+   - name: Ensure NOPASSWD for admin
+     tags: always
+     copy:
+       content: "admin ALL=(ALL) NOPASSWD:ALL\n"
+       dest: /etc/sudoers.d/admin
+       owner: root
+       group: root
+       mode: '0440'
+

@@ -3,11 +3,42 @@
   become: true
   pre_tasks:
 
-    - name: install updates
+    - name: update repo cache
       tags: always
       apt:
-        upgrade: dist
+
         update_cache: yes
+      changed_when:  false
+
+
+- hosts: all
+  become: true
+  tasks:
+
+
+
+   - name: add ssh key for admin
+     tags: always
+     authorized_key:
+         user: admin
+         key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC+QWAXxQFgN4CItjnyrp22UnM6iT20RGX5+oB9YhYaZ ansible"
+
+- hosts: workstaions
+  become: true
+  tasks: 
+    - name: install unzip
+      package:
+          name: unzip
+
+    - name: install terraform
+      unarchive:
+            src: https://releases.hashicorp.com/terraform/1.11.3/terraform_1.11.3_freebsd_amd64.zip
+            dest: /usr/local/bin
+            remote_src: yes
+            mode: 0755
+            owner: root
+            group: root
+
 
 - hosts: web_servers
   become: true
@@ -30,6 +61,7 @@
          group: root
          mode: '0644'
 
+
 - hosts: db_servers
   become: true
   tasks:
@@ -39,6 +71,7 @@
       apt:
         name: mariadb-server
         state: latest
+
 
 
 - hosts: file_servers

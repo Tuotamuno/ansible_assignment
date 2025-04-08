@@ -1,9 +1,12 @@
 [web_servers]
-192.168.1.213 ansible_user=vboxuser
+192.168.1.213 
 
 [file_servers]
-192.168.1.198 ansible_user=divine
+192.168.1.198 
 
 [db_servers]
 192.168.1.198
+
+[workstations]
+172.30.173.3 
 
