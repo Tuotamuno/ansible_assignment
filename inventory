@@ -1,4 +1,9 @@
-[all]
-192.168.1.213 ansible_user=vboxuser 
+[web_servers]
+192.168.1.213 ansible_user=vboxuser
+
+[file_servers]
 192.168.1.198 ansible_user=divine
+
+[db_servers]
+192.168.1.198
 
