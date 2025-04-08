@@ -1,0 +1,85 @@
+---
+- hosts: all
+  become: true
+  pre_tasks:
+
+    - name: update repo cache
+      tags: always
+      apt:
+
+        update_cache: yes
+      changed_when:  false
+
+
+- hosts: all
+  become: true
+  tasks:
+
+
+
+   - name: add ssh key for admin
+     tags: always
+     authorized_key:
+         user: admin
+         key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC+QWAXxQFgN4CItjnyrp22UnM6iT20RGX5+oB9YhYaZ ansible"
+
+- hosts: workstaions
+  become: true
+  tasks: 
+    - name: install unzip
+      package:
+          name: unzip
+
+    - name: install terraform
+      unarchive:
+            src: https://releases.hashicorp.com/terraform/1.11.3/terraform_1.11.3_freebsd_amd64.zip
+            dest: /usr/local/bin
+            remote_src: yes
+            mode: 0755
+            owner: root
+            group: root
+
+
+- hosts: web_servers
+  become: true
+  tasks:
+
+    - name: install apache2 and php package
+      tags: apache,apache2,ubuntu
+      apt:
+        name:
+          - apache2
+          - libapache2-mod-php
+        state: latest
+
+    - name: copy default html file for site
+      tags: [apache, apache2, ubuntu]
+      copy:
+         src: default_site.html
+         dest: /var/www/html/index.html
+         owner: root
+         group: root
+         mode: '0644'
+
+
+- hosts: db_servers
+  become: true
+  tasks:
+
+    - name: install mariadb package
+      tags: db,mariadb,ubuntu
+      apt:
+        name: mariadb-server
+        state: latest
+
+
+
+- hosts: file_servers
+  become: true
+  tasks:
+
+  - name: install samba package
+    tags: samba
+    package:
+      name: samba
+      state: latest
